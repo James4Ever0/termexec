@@ -1,3 +1,5 @@
+<!-- TODO: save the last time terminal has content update, and use the timestamp for activity monitoring, signal 'terminal idle' event if no activity in the next X seconds -->
+
 
 <div>
 <p align="center"><h1 align="center">Terminal Executor</h1></p>
@@ -41,6 +43,12 @@ import time
 with TerminalExecutor(['bash'], width=80, height=24) as executor:
     # Waits for the terminal emulator to be ready.
     time.sleep(1)  # Adjust sleep time as necessary for your environment
+
+    # Or if you prefer to wait for terminal idle event
+    try:
+        executor.terminal.wait_for_terminal_idle(duration=1, timeout=10)
+    except TimeoutError:
+        print("Terminal did not become idle in time.")
 
     # Get the current display of the terminal emulator as a string.
     terminal_text = executor.display

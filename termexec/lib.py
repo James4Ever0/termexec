@@ -145,6 +145,8 @@ class TerminalProcess:
         """
         self._closing = False
         rows, cols = height, width
+        self.last_output_time = time.time()
+        """timestamp of last output from terminal process"""
         self.pty_process: ptyprocess.PtyProcess = cast(
             ptyprocess.PtyProcess,
             ptyprocess.PtyProcess.spawn(command, dimensions=(rows, cols)),
@@ -167,6 +169,25 @@ class TerminalProcess:
         )
         self.__start_ptyprocess_reading_thread()
         atexit.register(self.close)
+    
+    def wait_for_terminal_idle(self, duration:float, timeout: float, poll_interval=0.01):
+        """Waits until the terminal has been idle (no output) for the specified duration.
+
+        Args:
+            duration (float): The duration in seconds to wait for terminal idle.
+            timeout (float): The maximum time in seconds to wait before giving up.
+            poll_interval (float, optional): Interval in seconds to poll for terminal output. Defaults to 0.01.
+        Raises:
+            TimeoutError: If the terminal does not become idle within the timeout period.
+        """
+        start_time = time.time()
+        while True:
+            time_since_last_output = time.time() - self.last_output_time
+            if time_since_last_output >= duration:
+                break
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Timeout waiting for terminal to be idle")
+            time.sleep(poll_interval)
 
     def __start_ptyprocess_reading_thread(self):
         """Starts a thread to read output from the terminal process and update the Pyte screen"""
@@ -203,8 +224,10 @@ class TerminalProcess:
             try:
                 # ptyprocess.read is blocking. only pexpect has read_nonblocking
                 process_output_bytes = self.pty_process.read(1024)
-                # write bytes to pyte screen
-                self.vt_screen.write_bytes(process_output_bytes)
+                if process_output_bytes:
+                    # write bytes to pyte screen
+                    self.vt_screen.write_bytes(process_output_bytes)
+                    self.last_output_time = time.time()
             except KeyboardInterrupt:  # user interrupted
                 break
             except SystemExit:  # python process exit
