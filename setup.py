@@ -4,7 +4,7 @@ import os
 import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
-VERSION="0.0.1"
+VERSION="0.0.2"
 
 class UploadCommand(Command):
     """Support setup.py upload."""
@@ -60,7 +60,6 @@ setup(
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: The Unlicense",  # Choose an appropriate license
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.8",  # Specify required Python version

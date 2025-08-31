@@ -35,7 +35,29 @@ Note: if your platform does not have prebuilt binaries of agg-python-bindings, j
 
 ```python
 from termexec import TerminalExecutor
+import time
 
+# Initializes executor with a command to run in terminal emulator, using avt as backend, with automatic context cleanup
+with TerminalExecutor(['bash'], width=80, height=24) as executor:
+    # Waits for the terminal emulator to be ready.
+    time.sleep(1)  # Adjust sleep time as necessary for your environment
+
+    # Get the current display of the terminal emulator as a string.
+    terminal_text = executor.display
+    print("Terminal Display:")
+    print(terminal_text)
+
+    # Send input to the terminal emulator.
+    executor.input("echo Hello, World!\n")
+    print("After input:")
+    print(executor.display)
+
+    # Saves the current display of the terminal emulator as a .png file
+    executor.screenshot("screenshot.png")
+    print("Screenshot saved as screenshot.png")
+
+    # Get the PID of the terminal process.
+    print("Terminal process PID:", executor.terminal.pty_process.pid)
 ```
 
 ## Alternatives
