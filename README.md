@@ -10,6 +10,7 @@
 <a href="https://pypi.org/project/termexec/"><img alt="PyPI" src="https://img.shields.io/pypi/v/termexec"></a>
 <a href="https://pepy.tech/projects/termexec"><img src="https://static.pepy.tech/badge/termexec" alt="PyPI Downloads"></a>
 <a href="https://github.com/james4ever0/termexec"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+<a href="https://discord.gg/eM5vezJvEQ"><img alt="Discord" src="https://img.shields.io/discord/1146610656779440188?logo=discord&style=flat&logoColor=white"/></a>
 </p>
 </div>
 
